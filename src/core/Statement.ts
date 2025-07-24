@@ -52,12 +52,9 @@ export class Statement implements IStatement {
 			throw new Error('Axioms cannot be derived from other statements');
 		}
 
-		if (
-			(this.type === 'theory' || this.type === 'conclusion') &&
-			this.derivedFrom.length === 0
-		) {
+		if (this.type === 'theory' && this.derivedFrom.length === 0) {
 			throw new Error(
-				`${this.type}s must be derived from at least one statement`,
+				'Theories must be derived from at least one statement',
 			);
 		}
 	}

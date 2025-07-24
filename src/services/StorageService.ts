@@ -106,7 +106,6 @@ export class StorageService {
 		const statements = network.getAllStatements();
 		const axioms = statements.filter((s) => s.type === 'axiom');
 		const theories = statements.filter((s) => s.type === 'theory');
-		const conclusions = statements.filter((s) => s.type === 'conclusion');
 
 		let markdown = '# Knowledge Network Export\n\n';
 		markdown += `Generated on: ${new Date().toISOString()}\n\n`;
@@ -129,16 +128,6 @@ export class StorageService {
 			markdown += `- **Tags**: ${theory.tags.join(', ') || 'None'}\n`;
 			markdown += `- **Derived From**: ${theory.derivedFrom.join(', ')}\n`;
 			markdown += `- **Created**: ${theory.createdAt.toISOString()}\n\n`;
-		}
-
-		markdown += '## Conclusions\n\n';
-		for (const conclusion of conclusions) {
-			markdown += `### ${conclusion.id}\n`;
-			markdown += `- **Content**: ${conclusion.content}\n`;
-			markdown += `- **Confidence**: ${conclusion.confidence ?? 'N/A'}\n`;
-			markdown += `- **Tags**: ${conclusion.tags.join(', ') || 'None'}\n`;
-			markdown += `- **Derived From**: ${conclusion.derivedFrom.join(', ')}\n`;
-			markdown += `- **Created**: ${conclusion.createdAt.toISOString()}\n\n`;
 		}
 
 		return markdown;

@@ -209,7 +209,6 @@ export class QueryService {
 		const byType: Record<StatementType, number> = {
 			axiom: 0,
 			theory: 0,
-			conclusion: 0,
 		};
 
 		let totalConfidence = 0;

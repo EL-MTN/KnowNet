@@ -204,7 +204,6 @@ export class KnowledgeNetwork {
 				totalStatements: this.statements.size,
 				axioms: this.getStatementsByType('axiom').length,
 				theories: this.getStatementsByType('theory').length,
-				conclusions: this.getStatementsByType('conclusion').length,
 			},
 		};
 	}

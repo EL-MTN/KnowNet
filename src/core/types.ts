@@ -1,4 +1,4 @@
-export type StatementType = 'axiom' | 'theory' | 'conclusion';
+export type StatementType = 'axiom' | 'theory';
 
 export interface Statement {
 	id: string;
@@ -40,6 +40,5 @@ export interface KnowledgeNetworkData {
 		totalStatements: number;
 		axioms: number;
 		theories: number;
-		conclusions: number;
 	};
 }

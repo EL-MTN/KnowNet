@@ -96,7 +96,7 @@ class InteractiveCLI {
 			{
 				name: '📝 Add Statement',
 				value: 'add',
-				description: 'Add axiom, theory, or conclusion',
+				description: 'Add axiom or theory',
 			},
 			{
 				name: '📋 List Statements',
@@ -202,8 +202,7 @@ class InteractiveCLI {
 			message: 'Select statement type:',
 			choices: [
 				{ name: '🏛️  Axiom - Fundamental belief', value: 'axiom' },
-				{ name: '💭 Theory - Hypothesis to explore', value: 'theory' },
-				{ name: '✅ Conclusion - Derived belief', value: 'conclusion' },
+				{ name: '💭 Theory - Derived statement', value: 'theory' },
 			],
 		})) as StatementType;
 
@@ -366,7 +365,6 @@ class InteractiveCLI {
 					{ name: 'All types', value: 'all' },
 					{ name: 'Axioms', value: 'axiom' },
 					{ name: 'Theories', value: 'theory' },
-					{ name: 'Conclusions', value: 'conclusion' },
 				],
 			});
 
@@ -463,7 +461,6 @@ class InteractiveCLI {
 					choices: [
 						{ name: 'Axiom', value: 'axiom' },
 						{ name: 'Theory', value: 'theory' },
-						{ name: 'Conclusion', value: 'conclusion' },
 					],
 				})) as StatementType;
 			}
@@ -599,9 +596,6 @@ class InteractiveCLI {
 		);
 		console.log(`  ${chalk.blue('Axioms:')} ${summary.byType.axiom}`);
 		console.log(`  ${chalk.yellow('Theories:')} ${summary.byType.theory}`);
-		console.log(
-			`  ${chalk.green('Conclusions:')} ${summary.byType.conclusion}`,
-		);
 		console.log();
 
 		console.log(
@@ -695,7 +689,6 @@ class InteractiveCLI {
 			choices: [
 				{ name: 'Axiom', value: 'axiom' },
 				{ name: 'Theory', value: 'theory' },
-				{ name: 'Conclusion', value: 'conclusion' },
 			],
 		})) as StatementType;
 

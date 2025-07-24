@@ -80,10 +80,6 @@ export class TheoryGenerator {
 			return false;
 		}
 
-		if (source.type === 'conclusion' && target.type === 'theory') {
-			return false;
-		}
-
 		const ancestors = new Set<string>();
 		const collectAncestors = (id: string) => {
 			const stmt = this.network.getStatement(id);

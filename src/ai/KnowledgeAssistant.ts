@@ -363,7 +363,7 @@ export class KnowledgeAssistant {
 		const gaps: string[] = [];
 
 		// Check for missing fundamental statements
-		if (tags.includes('conclusion') || tags.includes('theory')) {
+		if (tags.includes('theory')) {
 			const hasAxioms = statements.some(
 				(s) =>
 					s.type === 'axiom' && s.tags.some((t) => tags.includes(t)),
