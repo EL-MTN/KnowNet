@@ -2,7 +2,7 @@
 
 A personal knowledge network for tracking beliefs, theories, and conclusions with derivation chains.
 
-![Cool](./cool.png)
+![Cool](cool.png)
 
 ## Overview
 
