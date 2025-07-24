@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-KnowNet is a TypeScript CLI application for personal knowledge management that tracks beliefs, theories, and conclusions with full derivation chains. It uses a layered architecture with clear separation between CLI, core domain logic, services, and AI integration.
+KnowNet is a TypeScript CLI application for personal knowledge management that tracks beliefs and theories with full derivation chains. It uses a layered architecture with clear separation between CLI, core domain logic, services, and AI integration.
 
 ## Development Commands
 
@@ -15,12 +15,11 @@ npm run dev
 # Build TypeScript to JavaScript
 npm run build
 
-# Run compiled application (command-line mode)
+# Run compiled application (interactive mode)
 npm start
 
-# Run interactive mode (NEW - continuous interface)
-npm run interactive       # Development mode
-npm run interactive:dist  # Production mode (requires build)
+# Command-line mode is available through npm run dev
+# Example: npm run dev add axiom "My belief" --confidence 0.8 --tags philosophy
 
 # Run tests (Jest framework configured but no tests implemented yet)
 npm test
@@ -34,13 +33,13 @@ npm run typecheck   # TypeScript type verification without emit
 
 The codebase follows a domain-driven design with these key layers:
 
-1. **CLI Layer** (`src/cli/`) - Commander.js based interface handling user interactions
+1. **CLI Layer** (`src/cli/`) - Interactive menu-driven interface handling user interactions
 2. **Core Domain** (`src/core/`) - Business logic for statements, derivations, and knowledge network
 3. **Services** (`src/services/`) - Storage, querying, and contradiction detection
-4. **AI Integration** (`src/ai/`) - Theory generation capabilities (currently placeholder)
+4. **AI Integration** (`src/ai/`) - Theory generation, duplicate detection, and knowledge insights via local LLM
 
 Key architectural patterns:
-- All statements (axioms, theories, conclusions) extend the base Statement class
+- All statements (axioms and theories) extend the base Statement class
 - DerivationEngine handles logic propagation and confidence calculations
 - KnowledgeNetwork is the main aggregate managing all statements and their relationships
 - Services are stateless and operate on the knowledge network
@@ -52,7 +51,6 @@ Key architectural patterns:
 - **Statement Types**: 
   - Axioms: Fundamental beliefs (no derivation)
   - Theories: Hypotheses derived from other statements
-  - Conclusions: Beliefs with high confidence derived from theories/axioms
 - **Confidence System**: Optional confidence levels (0-1) that propagate through derivation chains
 
 ## Working with the Codebase

@@ -16,6 +16,7 @@ import {
 import { Statement } from '../core/Statement';
 import {
 	ContradictionDetector,
+	GraphVisualizationService,
 	QueryService,
 	StorageService,
 } from '../services';
@@ -109,6 +110,11 @@ class InteractiveCLI {
 				description: 'Query statements',
 			},
 			{
+				name: '✏️  Edit Statement',
+				value: 'edit',
+				description: 'Edit existing statements',
+			},
+			{
 				name: '🔗 Show Chain',
 				value: 'chain',
 				description: 'View derivation chain',
@@ -132,6 +138,11 @@ class InteractiveCLI {
 				name: '🤖 AI Assist',
 				value: 'derive',
 				description: 'Generate theories with AI',
+			},
+			{
+				name: '🌐 Visualize',
+				value: 'visualize',
+				description: 'Graph visualization',
 			},
 			{
 				name: '💾 Export',
@@ -170,6 +181,9 @@ class InteractiveCLI {
 			case 'search':
 				await this.searchStatements();
 				break;
+			case 'edit':
+				await this.editStatement();
+				break;
 			case 'chain':
 				await this.showChain();
 				break;
@@ -184,6 +198,9 @@ class InteractiveCLI {
 				break;
 			case 'derive':
 				await this.deriveWithAI();
+				break;
+			case 'visualize':
+				await this.visualizeNetwork();
 				break;
 			case 'export':
 				await this.exportNetwork();
@@ -951,11 +968,21 @@ class InteractiveCLI {
 			],
 		});
 
-		// For now, just placeholder - full edit functionality would be implemented later
-		if (action !== 'back') {
-			console.log(
-				chalk.gray('\n(Edit functionality not yet implemented)\n'),
-			);
+		switch (action) {
+			case 'edit':
+				await this.editStatementContent(statement);
+				break;
+			case 'confidence':
+				await this.updateStatementConfidence(statement);
+				break;
+			case 'tags':
+				await this.updateStatementTags(statement);
+				break;
+			case 'delete':
+				await this.deleteStatementById(statement.id);
+				break;
+			case 'back':
+				return;
 		}
 	}
 
@@ -1022,7 +1049,10 @@ class InteractiveCLI {
 			const action = await select({
 				message: 'What would you like to do?',
 				choices: [
-					{ name: 'Add this theory to your knowledge network', value: 'add' },
+					{
+						name: 'Add this theory to your knowledge network',
+						value: 'add',
+					},
 					{ name: 'Retry (generate a new theory)', value: 'retry' },
 					{ name: 'Cancel', value: 'cancel' },
 				],
@@ -1137,6 +1167,449 @@ class InteractiveCLI {
 					`  - [${dep.type}] ${dep.content.substring(0, 50)}${
 						dep.content.length > 50 ? '...' : ''
 					}`,
+				);
+			});
+			console.log();
+		}
+
+		const confirmDelete = await confirm({
+			message: `Are you sure you want to delete this ${statement.type}?`,
+			default: false,
+		});
+
+		if (!confirmDelete) {
+			console.log(chalk.gray('\nDeletion cancelled\n'));
+			return;
+		}
+
+		this.network.deleteStatement(statementId);
+		await this.saveNetwork();
+
+		console.log(chalk.green('\n✅ Statement deleted\n'));
+	}
+
+	private async editStatement() {
+		const statements = this.network.getAllStatements();
+		if (statements.length === 0) {
+			console.log(
+				chalk.yellow('\n⚠️  No statements available to edit\n'),
+			);
+			return;
+		}
+
+		const statementId = await select({
+			message: 'Select a statement to edit:',
+			choices: statements.map((stmt) => ({
+				name: `[${stmt.type}] ${stmt.content.substring(0, 60)}${
+					stmt.content.length > 60 ? '...' : ''
+				}`,
+				value: stmt.id,
+			})),
+			pageSize: 10,
+		});
+
+		await this.reviewStatement(statementId);
+	}
+
+	private async editStatementContent(statement: Statement) {
+		console.log(chalk.bold('\n✏️  Edit Statement Content\n'));
+		console.log(chalk.gray('Current content:'));
+		console.log(statement.content);
+		console.log();
+
+		const newContent = await input({
+			message: 'Enter new content:',
+			default: statement.content,
+			validate: (value) =>
+				value.trim().length > 0 || 'Content cannot be empty',
+		});
+
+		if (newContent === statement.content) {
+			console.log(chalk.gray('\nNo changes made\n'));
+			return;
+		}
+
+		try {
+			this.network.updateStatement(statement.id, { content: newContent });
+			await this.saveNetwork();
+			console.log(chalk.green('\n✅ Content updated successfully\n'));
+		} catch (error) {
+			console.log(chalk.red(`\n❌ Error: ${(error as Error).message}\n`));
+		}
+	}
+
+	private async updateStatementConfidence(statement: Statement) {
+		console.log(chalk.bold('\n📊 Update Statement Confidence\n'));
+
+		if (statement.confidence !== undefined) {
+			console.log(
+				chalk.gray(`Current confidence: ${statement.confidence}`),
+			);
+		} else {
+			console.log(chalk.gray('Current confidence: Not set'));
+		}
+		console.log();
+
+		const newConfidence = await input({
+			message: 'Enter new confidence (0-1):',
+			default: statement.confidence?.toString() || '0.5',
+			validate: (value) => {
+				const num = parseFloat(value);
+				if (isNaN(num)) return 'Please enter a valid number';
+				if (num < 0 || num > 1)
+					return 'Confidence must be between 0 and 1';
+				return true;
+			},
+		});
+
+		const confidenceValue = parseFloat(newConfidence);
+
+		try {
+			this.network.updateStatement(statement.id, {
+				confidence: confidenceValue,
+			});
+			await this.saveNetwork();
+			console.log(chalk.green('\n✅ Confidence updated successfully\n'));
+		} catch (error) {
+			console.log(chalk.red(`\n❌ Error: ${(error as Error).message}\n`));
+		}
+	}
+
+	private async updateStatementTags(statement: Statement) {
+		console.log(chalk.bold('\n🏷️  Update Statement Tags\n'));
+
+		if (statement.tags.length > 0) {
+			console.log(chalk.gray('Current tags:'));
+			console.log(
+				statement.tags.map((t) => chalk.cyan(`#${t}`)).join(' '),
+			);
+		} else {
+			console.log(chalk.gray('Current tags: None'));
+		}
+		console.log();
+
+		const action = await select({
+			message: 'What would you like to do?',
+			choices: [
+				{ name: 'Replace all tags', value: 'replace' },
+				{ name: 'Add new tags', value: 'add' },
+				{ name: 'Remove tags', value: 'remove' },
+				{ name: 'Cancel', value: 'cancel' },
+			],
+		});
+
+		if (action === 'cancel') return;
+
+		switch (action) {
+			case 'replace': {
+				const newTags = await input({
+					message: 'Enter new tags (comma-separated):',
+					default: statement.tags.join(', '),
+				});
+
+				const tags = newTags
+					.split(',')
+					.map((t) => t.trim())
+					.filter((t) => t.length > 0);
+
+				try {
+					this.network.updateStatement(statement.id, { tags });
+					await this.saveNetwork();
+					console.log(
+						chalk.green('\n✅ Tags updated successfully\n'),
+					);
+				} catch (error) {
+					console.log(
+						chalk.red(`\n❌ Error: ${(error as Error).message}\n`),
+					);
+				}
+				break;
+			}
+			case 'add': {
+				const newTags = await input({
+					message: 'Enter tags to add (comma-separated):',
+				});
+
+				const tagsToAdd = newTags
+					.split(',')
+					.map((t) => t.trim())
+					.filter((t) => t.length > 0);
+
+				const updatedTags = [
+					...new Set([...statement.tags, ...tagsToAdd]),
+				];
+
+				try {
+					this.network.updateStatement(statement.id, {
+						tags: updatedTags,
+					});
+					await this.saveNetwork();
+					console.log(chalk.green('\n✅ Tags added successfully\n'));
+				} catch (error) {
+					console.log(
+						chalk.red(`\n❌ Error: ${(error as Error).message}\n`),
+					);
+				}
+				break;
+			}
+			case 'remove': {
+				if (statement.tags.length === 0) {
+					console.log(chalk.yellow('\n⚠️  No tags to remove\n'));
+					return;
+				}
+
+				const tagsToRemove = await checkbox({
+					message: 'Select tags to remove:',
+					choices: statement.tags.map((tag) => ({
+						name: chalk.cyan(`#${tag}`),
+						value: tag,
+					})),
+				});
+
+				const updatedTags = statement.tags.filter(
+					(t) => !tagsToRemove.includes(t),
+				);
+
+				try {
+					this.network.updateStatement(statement.id, {
+						tags: updatedTags,
+					});
+					await this.saveNetwork();
+					console.log(
+						chalk.green('\n✅ Tags removed successfully\n'),
+					);
+				} catch (error) {
+					console.log(
+						chalk.red(`\n❌ Error: ${(error as Error).message}\n`),
+					);
+				}
+				break;
+			}
+		}
+	}
+
+	private async visualizeNetwork() {
+		const graphService = new GraphVisualizationService(this.network);
+		const stats = graphService.getGraphStats();
+
+		console.log(chalk.bold('\n🌐 Knowledge Network Visualization\n'));
+		console.log(chalk.gray('Graph Statistics:'));
+		console.log(`  • Total Nodes: ${stats.totalNodes}`);
+		console.log(`  • Total Edges: ${stats.totalEdges}`);
+		console.log(`  • Orphan Nodes: ${stats.orphanNodes}`);
+		console.log(`  • Max Depth: ${stats.maxDepth}`);
+		console.log(`  • Root Components: ${stats.connectedComponents}\n`);
+
+		if (stats.totalNodes === 0) {
+			console.log(chalk.yellow('⚠️  No statements in the knowledge network\n'));
+			return;
+		}
+
+		const visualizationType = await select({
+			message: 'Choose visualization type:',
+			choices: [
+				{
+					name: '📊 Export to DOT (Graphviz)',
+					value: 'dot',
+					description: 'Export for external visualization',
+				},
+				{
+					name: '🔍 Interactive Explorer',
+					value: 'explore',
+					description: 'Navigate through the graph interactively',
+				},
+				{ name: '← Back', value: 'back' },
+			],
+		});
+
+		switch (visualizationType) {
+			case 'dot':
+				await this.exportDOTFormat(graphService);
+				break;
+			case 'explore':
+				await this.exploreGraph();
+				break;
+			case 'back':
+				return;
+		}
+	}
+
+	private async exportDOTFormat(graphService: GraphVisualizationService) {
+		console.log(chalk.bold('\n📊 Export to DOT Format\n'));
+
+		const includeOrphans = await confirm({
+			message: 'Include orphan nodes (no connections)?',
+			default: true,
+		});
+
+		const rankdir = await select({
+			message: 'Graph direction:',
+			choices: [
+				{ name: 'Top to Bottom', value: 'TB' },
+				{ name: 'Bottom to Top', value: 'BT' },
+				{ name: 'Left to Right', value: 'LR' },
+				{ name: 'Right to Left', value: 'RL' },
+			],
+		});
+
+		const dot = graphService.exportToDOT({
+			title: 'KnowNet Knowledge Graph',
+			rankdir: rankdir as 'TB' | 'BT' | 'LR' | 'RL',
+			includeOrphans,
+		});
+
+		const filename = `knowledge-graph-${new Date().toISOString().split('T')[0]}.dot`;
+		const filepath = `exports/${filename}`;
+
+		// Ensure exports directory exists
+		const fs = await import('fs/promises');
+		await fs.mkdir('exports', { recursive: true });
+		await fs.writeFile(filepath, dot);
+
+		console.log(chalk.green(`\n✅ Graph exported to: ${chalk.yellow(filepath)}\n`));
+		console.log(chalk.gray('To visualize, use Graphviz:'));
+		console.log(chalk.cyan(`  dot -Tpng ${filepath} -o graph.png`));
+		console.log(chalk.cyan(`  dot -Tsvg ${filepath} -o graph.svg\n`));
+	}
+
+	private async exploreGraph() {
+		let currentNodeId: string | null = null;
+		
+		while (true) {
+			console.log(chalk.bold('\n🔍 Interactive Graph Explorer\n'));
+
+			if (!currentNodeId) {
+				// Select starting node
+				const statements = this.network.getAllStatements();
+				currentNodeId = await select({
+					message: 'Select a node to explore:',
+					choices: statements.map(stmt => ({
+						name: `[${stmt.type}] ${stmt.content.substring(0, 60)}...`,
+						value: stmt.id,
+					})),
+					pageSize: 10,
+				});
+			}
+
+			const currentNode: Statement = this.network.getStatement(currentNodeId)!;
+			const parents: Statement[] = currentNode.derivedFrom.map((id: string) => this.network.getStatement(id)!);
+			const children = this.network.getDependents(currentNodeId);
+
+			// Display current node
+			console.log(chalk.bold('\n📍 Current Node:\n'));
+			console.log(chalk.yellow(`[${currentNode.type.toUpperCase()}]`) + ` ${currentNode.content}`);
+			
+			if (currentNode.confidence !== undefined) {
+				console.log(chalk.gray(`Confidence: ${currentNode.confidence}`));
+			}
+			
+			if (currentNode.tags.length > 0) {
+				console.log(chalk.gray(`Tags: ${currentNode.tags.map((t: string) => chalk.cyan(`#${t}`)).join(' ')}`));
+			}
+
+			// Show connections
+			if (parents.length > 0) {
+				console.log(chalk.bold('\n⬆️  Derived From:'));
+				parents.forEach((parent: Statement, i: number) => {
+					console.log(`  ${i + 1}. [${parent.type}] ${parent.content.substring(0, 40)}...`);
+				});
+			}
+
+			if (children.length > 0) {
+				console.log(chalk.bold('\n⬇️  Derives To:'));
+				children.forEach((child, i) => {
+					console.log(`  ${i + 1}. [${child.type}] ${child.content.substring(0, 40)}...`);
+				});
+			}
+
+			// Navigation options
+			const choices = [];
+			
+			if (parents.length > 0) {
+				choices.push({
+					name: '⬆️  Go to parent',
+					value: 'parent',
+				});
+			}
+			
+			if (children.length > 0) {
+				choices.push({
+					name: '⬇️  Go to child',
+					value: 'child',
+				});
+			}
+			
+			choices.push(
+				{ name: '🔍 Select new node', value: 'new' },
+				{ name: '📝 View full details', value: 'details' },
+				{ name: '← Back to menu', value: 'back' },
+			);
+
+			const action = await select({
+				message: '\nWhat would you like to do?',
+				choices,
+			});
+
+			switch (action) {
+				case 'parent':
+					if (parents.length === 1) {
+						currentNodeId = parents[0].id;
+					} else {
+						currentNodeId = await select({
+							message: 'Select parent to navigate to:',
+							choices: parents.map((p: Statement, i: number) => ({
+								name: `${i + 1}. [${p.type}] ${p.content.substring(0, 50)}...`,
+								value: p.id,
+							})),
+						});
+					}
+					break;
+				
+				case 'child':
+					if (children.length === 1) {
+						currentNodeId = children[0].id;
+					} else {
+						currentNodeId = await select({
+							message: 'Select child to navigate to:',
+							choices: children.map((c, i) => ({
+								name: `${i + 1}. [${c.type}] ${c.content.substring(0, 50)}...`,
+								value: c.id,
+							})),
+						});
+					}
+					break;
+				
+				case 'new':
+					currentNodeId = null;
+					break;
+				
+				case 'details':
+					await this.reviewStatement(currentNodeId);
+					break;
+				
+				case 'back':
+					return;
+			}
+		}
+	}
+
+	private async deleteStatementById(statementId: string) {
+		const statement = this.network.getStatement(statementId);
+		if (!statement) {
+			console.log(chalk.red('\n❌ Statement not found\n'));
+			return;
+		}
+
+		const dependents = this.network.getDependents(statementId);
+		if (dependents.length > 0) {
+			console.log(
+				chalk.yellow(
+					`\n⚠️  This statement has ${dependents.length} dependents:`,
+				),
+			);
+			dependents.forEach((dep) => {
+				console.log(
+					`  • [${dep.type}] ${dep.content.substring(0, 50)}...`,
 				);
 			});
 			console.log();
