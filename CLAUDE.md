@@ -39,6 +39,7 @@ The codebase follows a domain-driven design with these key layers:
 4. **AI Integration** (`src/ai/`) - Theory generation, duplicate detection, and knowledge insights via local LLM
 
 Key architectural patterns:
+
 - All statements (axioms and theories) extend the base Statement class
 - DerivationEngine handles logic propagation and confidence calculations
 - KnowledgeNetwork is the main aggregate managing all statements and their relationships
@@ -48,14 +49,15 @@ Key architectural patterns:
 
 - **TypeScript Configuration**: Strict mode enabled with comprehensive type checking
 - **Data Persistence**: JSON file storage at `data/knowledge.json` with automatic backups
-- **Statement Types**: 
-  - Axioms: Fundamental beliefs (no derivation)
-  - Theories: Hypotheses derived from other statements
+- **Statement Types**:
+    - Axioms: Fundamental beliefs (no derivation)
+    - Theories: Hypotheses derived from other statements
 - **Confidence System**: Optional confidence levels (0-1) that propagate through derivation chains
 
 ## Working with the Codebase
 
 When implementing new features:
+
 1. Follow the existing architectural patterns - extend Statement for new statement types, add services for new capabilities
 2. Use the existing type definitions in `src/core/types.ts`
 3. Maintain the separation between layers - CLI should not directly access storage, services should be stateless
@@ -63,6 +65,7 @@ When implementing new features:
 5. Use UUID for all statement IDs via the `uuid` package
 
 When modifying existing code:
+
 1. Check for dependencies in the derivation system before changing statement relationships
 2. Run contradiction detection after changes that affect logical relationships
 3. Ensure data migration if changing the storage format

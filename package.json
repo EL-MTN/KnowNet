@@ -1,50 +1,51 @@
 {
-  "name": "knownet",
-  "version": "0.1.0",
-  "description": "A personal knowledge network for tracking beliefs, theories, and conclusions",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
-  },
-  "keywords": [
-    "knowledge",
-    "graph",
-    "beliefs",
-    "reasoning"
-  ],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.57.0",
-    "axios": "^1.11.0",
-    "dotenv": "^17.2.0",
-    "https-proxy-agent": "^7.0.6",
-    "next": "14.2.5",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "uuid": "^9.0.1",
-    "@tanstack/react-query": "^5.51.1",
-    "zustand": "^4.5.4"
-  },
-  "devDependencies": {
-    "@types/node": "^20.19.9",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@types/uuid": "^9.0.8",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.5",
-    "eslint-config-prettier": "^10.1.8",
-    "jest": "^30.0.5",
-    "postcss": "^8.4.40",
-    "prettier": "^3.6.2",
-    "tailwindcss": "^3.4.7",
-    "ts-jest": "^29.4.0",
-    "typescript": "^5.8.3"
-  }
+	"name": "knownet",
+	"version": "0.1.0",
+	"description": "A personal knowledge network for tracking beliefs, theories, and conclusions",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"typecheck": "tsc --noEmit",
+		"test": "jest",
+		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+	},
+	"keywords": [
+		"knowledge",
+		"graph",
+		"beliefs",
+		"reasoning"
+	],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"@anthropic-ai/sdk": "^0.57.0",
+		"@heroicons/react": "^2.2.0",
+		"@tanstack/react-query": "^5.51.1",
+		"axios": "^1.11.0",
+		"dotenv": "^17.2.0",
+		"https-proxy-agent": "^7.0.6",
+		"next": "14.2.5",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"uuid": "^9.0.1",
+		"zustand": "^4.5.4"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.9",
+		"@types/react": "^18.3.3",
+		"@types/react-dom": "^18.3.0",
+		"@types/uuid": "^9.0.8",
+		"autoprefixer": "^10.4.19",
+		"eslint": "^8.57.0",
+		"eslint-config-next": "14.2.5",
+		"eslint-config-prettier": "^10.1.8",
+		"jest": "^30.0.5",
+		"postcss": "^8.4.40",
+		"prettier": "^3.6.2",
+		"tailwindcss": "^3.4.7",
+		"ts-jest": "^29.4.0",
+		"typescript": "^5.8.3"
+	}
 }

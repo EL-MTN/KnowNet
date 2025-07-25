@@ -7,7 +7,9 @@ export interface AIConfig {
 }
 
 const DEFAULT_CONFIG: AIConfig = {
-	url: process.env.NEXT_PUBLIC_AI_URL || 'http://127.0.0.1:1234/v1/chat/completions',
+	url:
+		process.env.NEXT_PUBLIC_AI_URL ||
+		'http://127.0.0.1:1234/v1/chat/completions',
 	model: process.env.NEXT_PUBLIC_AI_MODEL || 'llama-3.2-3b-instruct',
 	maxTokens: -1,
 	temperature: 0,
@@ -45,7 +47,10 @@ export class AIConfigManager {
 	private saveToLocalStorage(): void {
 		if (typeof window !== 'undefined') {
 			try {
-				localStorage.setItem('knownet-ai-config', JSON.stringify(this.config));
+				localStorage.setItem(
+					'knownet-ai-config',
+					JSON.stringify(this.config),
+				);
 			} catch (error) {
 				console.error('Could not save AI configuration:', error);
 			}

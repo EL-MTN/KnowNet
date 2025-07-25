@@ -45,6 +45,7 @@ npm start
 ```
 
 Open http://localhost:3000 to access the web interface featuring:
+
 - 🌐 Interactive graph visualization with vis.js
 - 📝 Real-time statement management
 - 🔍 Smart search and filtering
@@ -59,6 +60,7 @@ npm run interactive
 ```
 
 This provides:
+
 - 🎨 Colorful, intuitive menus
 - ✨ Step-by-step guided workflows
 - 🔄 Continuous operation without restarting
@@ -71,16 +73,19 @@ For scripting and automation, use the traditional command-line interface.
 ### Adding Statements
 
 Add an axiom (fundamental belief):
+
 ```bash
 npm start add axiom "Humans need food to survive" --tags biology,survival --confidence 1.0
 ```
 
 Add a theory derived from existing statements:
+
 ```bash
 npm start add theory "Resource allocation requires prioritization" --from axiom-1,axiom-2 --tags economics
 ```
 
 Add a conclusion:
+
 ```bash
 npm start add conclusion "Food distribution systems are essential" --from theory-1 --confidence 0.9
 ```
@@ -88,21 +93,25 @@ npm start add conclusion "Food distribution systems are essential" --from theory
 ### Querying the Network
 
 List all statements:
+
 ```bash
 npm start list
 ```
 
 List only axioms:
+
 ```bash
 npm start list axiom
 ```
 
 Search by content:
+
 ```bash
 npm start query "resource"
 ```
 
 Advanced query with filters:
+
 ```bash
 npm start query "economic" --type theory --tags economics --min-confidence 0.8
 ```
@@ -110,6 +119,7 @@ npm start query "economic" --type theory --tags economics --min-confidence 0.8
 ### Exploring Relationships
 
 Show derivation chain for a statement:
+
 ```bash
 npm start chain <statement-id>
 ```
@@ -117,26 +127,31 @@ npm start chain <statement-id>
 ### Managing the Network
 
 Check for contradictions:
+
 ```bash
 npm start check
 ```
 
 View statistics:
+
 ```bash
 npm start stats
 ```
 
 Export to Markdown:
+
 ```bash
 npm start export knowledge-export.md
 ```
 
 Create a backup:
+
 ```bash
 npm start backup
 ```
 
 Delete a statement:
+
 ```bash
 npm start delete <statement-id>
 ```
@@ -144,6 +159,7 @@ npm start delete <statement-id>
 ### AI-Assisted Theory Generation
 
 Generate new theories from existing statements:
+
 ```bash
 npm start derive --statements axiom-1,axiom-2 --prompt "What economic implications follow?"
 ```
@@ -151,29 +167,33 @@ npm start derive --statements axiom-1,axiom-2 --prompt "What economic implicatio
 ## Example Workflow
 
 1. Start with fundamental axioms:
-   ```bash
-   npm start add axiom "Humans have limited time" --tags time,human
-   npm start add axiom "Learning requires time investment" --tags learning,time
-   ```
+
+    ```bash
+    npm start add axiom "Humans have limited time" --tags time,human
+    npm start add axiom "Learning requires time investment" --tags learning,time
+    ```
 
 2. Derive theories:
-   ```bash
-   npm start add theory "People must prioritize what to learn" --from <id1>,<id2> --tags learning,decision
-   ```
+
+    ```bash
+    npm start add theory "People must prioritize what to learn" --from <id1>,<id2> --tags learning,decision
+    ```
 
 3. Check for contradictions:
-   ```bash
-   npm start check
-   ```
+
+    ```bash
+    npm start check
+    ```
 
 4. Generate new insights:
-   ```bash
-   npm start derive --statements <theory-id> --prompt "What are the implications for education?"
-   ```
+    ```bash
+    npm start derive --statements <theory-id> --prompt "What are the implications for education?"
+    ```
 
 ## Data Structure
 
 Statements are stored in JSON format with the following structure:
+
 - `id`: Unique identifier
 - `type`: axiom, theory, or conclusion
 - `content`: The statement text
@@ -186,11 +206,13 @@ Statements are stored in JSON format with the following structure:
 ## Development
 
 Run in development mode:
+
 ```bash
 npm run dev
 ```
 
 Run tests:
+
 ```bash
 npm test
 ```

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 		if (!content) {
 			return NextResponse.json(
 				{ error: 'content is required' },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 		const result = await assistant.checkForDuplicates(
 			content,
 			type as StatementType,
-			tags
+			tags,
 		);
 
 		return NextResponse.json(result);
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 		console.error('Duplicate check error:', error);
 		return NextResponse.json(
 			{ error: 'Failed to check for duplicates' },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

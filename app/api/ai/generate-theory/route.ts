@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 		if (!sourceStatementIds || !Array.isArray(sourceStatementIds)) {
 			return NextResponse.json(
 				{ error: 'sourceStatementIds array is required' },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -18,13 +18,13 @@ export async function POST(request: NextRequest) {
 		const generator = new TheoryGenerator(network);
 
 		const sourceStatements = sourceStatementIds
-			.map(id => network.getStatement(id))
+			.map((id) => network.getStatement(id))
 			.filter((stmt): stmt is NonNullable<typeof stmt> => stmt !== null);
 
 		if (sourceStatements.length === 0) {
 			return NextResponse.json(
 				{ error: 'No valid source statements found' },
-				{ status: 404 }
+				{ status: 404 },
 			);
 		}
 
@@ -34,15 +34,21 @@ export async function POST(request: NextRequest) {
 		} else {
 			const theories = await generator.generateMultipleTheories(
 				sourceStatements,
-				count
+				count,
 			);
 			return NextResponse.json({ theories });
 		}
-	} catch (error) {
+	} catch (error: any) {
 		console.error('Theory generation error:', error);
+
+		// Return specific error message
+		const errorMessage = error.message || 'Failed to generate theory';
 		return NextResponse.json(
-			{ error: 'Failed to generate theory' },
-			{ status: 500 }
+			{
+				error: errorMessage,
+				details: error.response?.data || undefined,
+			},
+			{ status: 500 },
 		);
 	}
 }

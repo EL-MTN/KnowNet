@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 		if (!query) {
 			return NextResponse.json(
 				{ error: 'query is required' },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 		console.error('Knowledge context error:', error);
 		return NextResponse.json(
 			{ error: 'Failed to get knowledge context' },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

@@ -1,142 +1,122 @@
 {
-  "statements": [
-    {
-      "id": "c6286135-fc43-47b3-b6bc-af8e08e8201c",
-      "type": "axiom",
-      "content": "Humans have a limited lifespan",
-      "tags": [],
-      "createdAt": "2025-07-24T09:08:43.159Z",
-      "updatedAt": "2025-07-24T09:08:43.159Z",
-      "derivedFrom": []
-    },
-    {
-      "id": "77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
-      "type": "axiom",
-      "content": "Humans need food to survive",
-      "tags": [],
-      "createdAt": "2025-07-24T09:09:05.194Z",
-      "updatedAt": "2025-07-24T09:09:05.194Z",
-      "derivedFrom": []
-    },
-    {
-      "id": "7ffac270-defb-4e99-89c3-7000e43ec06f",
-      "type": "theory",
-      "content": "The finite lifespan of humans implies that their productive time is also limited",
-      "confidence": 0.8,
-      "tags": [
-        "productivity",
-        "limited resources"
-      ],
-      "createdAt": "2025-07-24T09:12:39.252Z",
-      "updatedAt": "2025-07-24T09:12:39.252Z",
-      "derivedFrom": [
-        "c6286135-fc43-47b3-b6bc-af8e08e8201c",
-        "77ca40f6-73e0-4533-80b0-23ca4f2bb21f"
-      ]
-    },
-    {
-      "id": "4ec24ca4-b26a-4e8a-bd12-92d5cdede8ae",
-      "type": "theory",
-      "content": "A reliable mechanism for acquiring sustenance is necessary to ensure continued survival.",
-      "confidence": 0.8,
-      "tags": [
-        "Survival",
-        "Resource Management"
-      ],
-      "createdAt": "2025-07-24T09:28:45.488Z",
-      "updatedAt": "2025-07-24T09:28:45.488Z",
-      "derivedFrom": [
-        "c6286135-fc43-47b3-b6bc-af8e08e8201c",
-        "77ca40f6-73e0-4533-80b0-23ca4f2bb21f"
-      ]
-    },
-    {
-      "id": "9be5f9dd-731f-4f81-8a11-b9bc7965f039",
-      "type": "theory",
-      "content": "Their productivity peaks at a certain age and then declines",
-      "confidence": 0.8,
-      "tags": [
-        "human development",
-        "productivity",
-        "life stages"
-      ],
-      "createdAt": "2025-07-24T09:29:14.178Z",
-      "updatedAt": "2025-07-24T09:29:14.178Z",
-      "derivedFrom": [
-        "77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
-        "7ffac270-defb-4e99-89c3-7000e43ec06f"
-      ]
-    },
-    {
-      "id": "0e086a74-87d5-4995-8c4c-b8ae94ee1254",
-      "type": "axiom",
-      "content": "Humans have limited mental capacity",
-      "tags": [],
-      "createdAt": "2025-07-24T09:29:27.020Z",
-      "updatedAt": "2025-07-24T09:29:27.020Z",
-      "derivedFrom": []
-    },
-    {
-      "id": "3a28b6a1-22f8-4394-bee5-4af9dbfdc756",
-      "type": "theory",
-      "content": "A finite amount of time is required to complete a substantial portion of any meaningful endeavor",
-      "confidence": 0.8,
-      "tags": [
-        "Lifespan Limitations",
-        "Mental Capacity Constraints"
-      ],
-      "createdAt": "2025-07-24T09:31:29.325Z",
-      "updatedAt": "2025-07-24T09:31:29.325Z",
-      "derivedFrom": [
-        "c6286135-fc43-47b3-b6bc-af8e08e8201c",
-        "0e086a74-87d5-4995-8c4c-b8ae94ee1254"
-      ]
-    },
-    {
-      "id": "b985013e-77ff-4766-8e8c-b20a87370bfc",
-      "type": "theory",
-      "content": "Efficient use of resources is crucial to maximize individual success during the limited time available",
-      "confidence": 0.8,
-      "tags": [
-        "productivity",
-        "resource management",
-        "time management"
-      ],
-      "createdAt": "2025-07-24T09:32:11.361Z",
-      "updatedAt": "2025-07-24T09:32:11.361Z",
-      "derivedFrom": [
-        "c6286135-fc43-47b3-b6bc-af8e08e8201c",
-        "77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
-        "7ffac270-defb-4e99-89c3-7000e43ec06f",
-        "4ec24ca4-b26a-4e8a-bd12-92d5cdede8ae",
-        "9be5f9dd-731f-4f81-8a11-b9bc7965f039",
-        "0e086a74-87d5-4995-8c4c-b8ae94ee1254",
-        "3a28b6a1-22f8-4394-bee5-4af9dbfdc756"
-      ]
-    },
-    {
-      "id": "662c6743-fe0f-4775-9039-f09bb27b40e7",
-      "type": "theory",
-      "content": "Humans can only process so much information before becoming overwhelmed",
-      "confidence": 0.8,
-      "tags": [
-        "Cognitive Limitations",
-        "Human Biology"
-      ],
-      "createdAt": "2025-07-24T09:32:34.640Z",
-      "updatedAt": "2025-07-24T09:32:34.640Z",
-      "derivedFrom": [
-        "77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
-        "0e086a74-87d5-4995-8c4c-b8ae94ee1254"
-      ]
-    }
-  ],
-  "metadata": {
-    "version": "1.0.0",
-    "exportedAt": "2025-07-24T09:32:34.640Z",
-    "totalStatements": 9,
-    "axioms": 3,
-    "theories": 6,
-    "conclusions": 0
-  }
+	"statements": [
+		{
+			"id": "c6286135-fc43-47b3-b6bc-af8e08e8201c",
+			"type": "axiom",
+			"content": "Humans have a limited lifespan",
+			"tags": [],
+			"createdAt": "2025-07-24T09:08:43.159Z",
+			"updatedAt": "2025-07-24T09:08:43.159Z",
+			"derivedFrom": []
+		},
+		{
+			"id": "77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
+			"type": "axiom",
+			"content": "Humans need food to survive",
+			"tags": [],
+			"createdAt": "2025-07-24T09:09:05.194Z",
+			"updatedAt": "2025-07-24T09:09:05.194Z",
+			"derivedFrom": []
+		},
+		{
+			"id": "7ffac270-defb-4e99-89c3-7000e43ec06f",
+			"type": "theory",
+			"content": "The finite lifespan of humans implies that their productive time is also limited",
+			"confidence": 0.8,
+			"tags": ["productivity", "limited resources"],
+			"createdAt": "2025-07-24T09:12:39.252Z",
+			"updatedAt": "2025-07-24T09:12:39.252Z",
+			"derivedFrom": [
+				"c6286135-fc43-47b3-b6bc-af8e08e8201c",
+				"77ca40f6-73e0-4533-80b0-23ca4f2bb21f"
+			]
+		},
+		{
+			"id": "4ec24ca4-b26a-4e8a-bd12-92d5cdede8ae",
+			"type": "theory",
+			"content": "A reliable mechanism for acquiring sustenance is necessary to ensure continued survival.",
+			"confidence": 0.8,
+			"tags": ["Survival", "Resource Management"],
+			"createdAt": "2025-07-24T09:28:45.488Z",
+			"updatedAt": "2025-07-24T09:28:45.488Z",
+			"derivedFrom": [
+				"c6286135-fc43-47b3-b6bc-af8e08e8201c",
+				"77ca40f6-73e0-4533-80b0-23ca4f2bb21f"
+			]
+		},
+		{
+			"id": "9be5f9dd-731f-4f81-8a11-b9bc7965f039",
+			"type": "theory",
+			"content": "Their productivity peaks at a certain age and then declines",
+			"confidence": 0.8,
+			"tags": ["human development", "productivity", "life stages"],
+			"createdAt": "2025-07-24T09:29:14.178Z",
+			"updatedAt": "2025-07-24T09:29:14.178Z",
+			"derivedFrom": [
+				"77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
+				"7ffac270-defb-4e99-89c3-7000e43ec06f"
+			]
+		},
+		{
+			"id": "0e086a74-87d5-4995-8c4c-b8ae94ee1254",
+			"type": "axiom",
+			"content": "Humans have limited mental capacity",
+			"tags": [],
+			"createdAt": "2025-07-24T09:29:27.020Z",
+			"updatedAt": "2025-07-24T09:29:27.020Z",
+			"derivedFrom": []
+		},
+		{
+			"id": "3a28b6a1-22f8-4394-bee5-4af9dbfdc756",
+			"type": "theory",
+			"content": "A finite amount of time is required to complete a substantial portion of any meaningful endeavor",
+			"confidence": 0.8,
+			"tags": ["Lifespan Limitations", "Mental Capacity Constraints"],
+			"createdAt": "2025-07-24T09:31:29.325Z",
+			"updatedAt": "2025-07-24T09:31:29.325Z",
+			"derivedFrom": [
+				"c6286135-fc43-47b3-b6bc-af8e08e8201c",
+				"0e086a74-87d5-4995-8c4c-b8ae94ee1254"
+			]
+		},
+		{
+			"id": "b985013e-77ff-4766-8e8c-b20a87370bfc",
+			"type": "theory",
+			"content": "Efficient use of resources is crucial to maximize individual success during the limited time available",
+			"confidence": 0.8,
+			"tags": ["productivity", "resource management", "time management"],
+			"createdAt": "2025-07-24T09:32:11.361Z",
+			"updatedAt": "2025-07-24T09:32:11.361Z",
+			"derivedFrom": [
+				"c6286135-fc43-47b3-b6bc-af8e08e8201c",
+				"77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
+				"7ffac270-defb-4e99-89c3-7000e43ec06f",
+				"4ec24ca4-b26a-4e8a-bd12-92d5cdede8ae",
+				"9be5f9dd-731f-4f81-8a11-b9bc7965f039",
+				"0e086a74-87d5-4995-8c4c-b8ae94ee1254",
+				"3a28b6a1-22f8-4394-bee5-4af9dbfdc756"
+			]
+		},
+		{
+			"id": "662c6743-fe0f-4775-9039-f09bb27b40e7",
+			"type": "theory",
+			"content": "Humans can only process so much information before becoming overwhelmed",
+			"confidence": 0.8,
+			"tags": ["Cognitive Limitations", "Human Biology"],
+			"createdAt": "2025-07-24T09:32:34.640Z",
+			"updatedAt": "2025-07-24T09:32:34.640Z",
+			"derivedFrom": [
+				"77ca40f6-73e0-4533-80b0-23ca4f2bb21f",
+				"0e086a74-87d5-4995-8c4c-b8ae94ee1254"
+			]
+		}
+	],
+	"metadata": {
+		"version": "1.0.0",
+		"exportedAt": "2025-07-24T09:32:34.640Z",
+		"totalStatements": 9,
+		"axioms": 3,
+		"theories": 6,
+		"conclusions": 0
+	}
 }

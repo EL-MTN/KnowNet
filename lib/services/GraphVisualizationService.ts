@@ -25,10 +25,12 @@ export class GraphVisualizationService {
 	/**
 	 * Generate graph data structure from the knowledge network
 	 */
-	generateGraphData(options: {
-		includeOrphans?: boolean;
-		maxLabelLength?: number;
-	} = {}): GraphData {
+	generateGraphData(
+		options: {
+			includeOrphans?: boolean;
+			maxLabelLength?: number;
+		} = {},
+	): GraphData {
 		const { includeOrphans = true, maxLabelLength = 50 } = options;
 		const statements = this.network.getAllStatements();
 		const nodes: GraphNode[] = [];
@@ -38,8 +40,11 @@ export class GraphVisualizationService {
 		// Create nodes
 		for (const statement of statements) {
 			// Skip orphans if requested
-			if (!includeOrphans && statement.derivedFrom.length === 0 && 
-				this.network.getDependents(statement.id).length === 0) {
+			if (
+				!includeOrphans &&
+				statement.derivedFrom.length === 0 &&
+				this.network.getDependents(statement.id).length === 0
+			) {
 				continue;
 			}
 
@@ -73,17 +78,19 @@ export class GraphVisualizationService {
 	/**
 	 * Export graph to DOT format for Graphviz
 	 */
-	exportToDOT(options: {
-		title?: string;
-		rankdir?: 'TB' | 'BT' | 'LR' | 'RL';
-		includeOrphans?: boolean;
-	} = {}): string {
-		const { 
-			title = 'Knowledge Network', 
+	exportToDOT(
+		options: {
+			title?: string;
+			rankdir?: 'TB' | 'BT' | 'LR' | 'RL';
+			includeOrphans?: boolean;
+		} = {},
+	): string {
+		const {
+			title = 'Knowledge Network',
 			rankdir = 'TB',
-			includeOrphans = true 
+			includeOrphans = true,
 		} = options;
-		
+
 		const graphData = this.generateGraphData({ includeOrphans });
 		let dot = `digraph "${title}" {\n`;
 		dot += `  rankdir=${rankdir};\n`;
@@ -94,13 +101,13 @@ export class GraphVisualizationService {
 		for (const node of graphData.nodes) {
 			const color = node.type === 'axiom' ? 'lightblue' : 'lightyellow';
 			const style = node.type === 'axiom' ? 'filled,bold' : 'filled';
-			const confidence = node.confidence !== undefined 
-				? `\\nConfidence: ${node.confidence}` 
-				: '';
-			const tags = node.tags.length > 0 
-				? `\\nTags: ${node.tags.join(', ')}` 
-				: '';
-			
+			const confidence =
+				node.confidence !== undefined
+					? `\\nConfidence: ${node.confidence}`
+					: '';
+			const tags =
+				node.tags.length > 0 ? `\\nTags: ${node.tags.join(', ')}` : '';
+
 			dot += `  "${node.id}" [label="${node.label}${confidence}${tags}", fillcolor=${color}, style="${style}"];\n`;
 		}
 
@@ -115,7 +122,6 @@ export class GraphVisualizationService {
 		return dot;
 	}
 
-
 	/**
 	 * Get graph statistics
 	 */
@@ -127,9 +133,9 @@ export class GraphVisualizationService {
 		connectedComponents: number;
 	} {
 		const graphData = this.generateGraphData();
-		const orphans = graphData.nodes.filter(node => {
-			const hasIncoming = graphData.edges.some(e => e.to === node.id);
-			const hasOutgoing = graphData.edges.some(e => e.from === node.id);
+		const orphans = graphData.nodes.filter((node) => {
+			const hasIncoming = graphData.edges.some((e) => e.to === node.id);
+			const hasOutgoing = graphData.edges.some((e) => e.from === node.id);
 			return !hasIncoming && !hasOutgoing;
 		});
 
@@ -145,8 +151,9 @@ export class GraphVisualizationService {
 		}
 
 		// Count connected components (simplified - counts root nodes)
-		const roots = this.network.getAllStatements()
-			.filter(s => s.derivedFrom.length === 0);
+		const roots = this.network
+			.getAllStatements()
+			.filter((s) => s.derivedFrom.length === 0);
 
 		return {
 			totalNodes: graphData.nodes.length,
@@ -164,6 +171,9 @@ export class GraphVisualizationService {
 
 	private calculateChainDepth(chain: DerivationChain): number {
 		if (chain.parents.length === 0) return 0;
-		return 1 + Math.max(...chain.parents.map(p => this.calculateChainDepth(p)));
+		return (
+			1 +
+			Math.max(...chain.parents.map((p) => this.calculateChainDepth(p)))
+		);
 	}
 }

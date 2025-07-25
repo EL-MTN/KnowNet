@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 		if (!statementId) {
 			return NextResponse.json(
 				{ error: 'statementId is required' },
-				{ status: 400 }
+				{ status: 400 },
 			);
 		}
 
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 		console.error('Derivation suggestion error:', error);
 		return NextResponse.json(
 			{ error: 'Failed to suggest derivations' },
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

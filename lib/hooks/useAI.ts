@@ -19,7 +19,10 @@ interface KnowledgeContextRequest {
 
 export function useGenerateTheory() {
 	return useMutation({
-		mutationFn: async ({ sourceStatementIds, count = 1 }: GenerateTheoryRequest) => {
+		mutationFn: async ({
+			sourceStatementIds,
+			count = 1,
+		}: GenerateTheoryRequest) => {
 			const response = await fetch('/api/ai/generate-theory', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -27,7 +30,8 @@ export function useGenerateTheory() {
 			});
 
 			if (!response.ok) {
-				throw new Error('Failed to generate theory');
+				const errorData = await response.json();
+				throw new Error(errorData.error || 'Failed to generate theory');
 			}
 
 			return response.json();
@@ -37,7 +41,11 @@ export function useGenerateTheory() {
 
 export function useCheckDuplicates() {
 	return useMutation({
-		mutationFn: async ({ content, type = 'theory', tags = [] }: CheckDuplicatesRequest) => {
+		mutationFn: async ({
+			content,
+			type = 'theory',
+			tags = [],
+		}: CheckDuplicatesRequest) => {
 			const response = await fetch('/api/ai/check-duplicates', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },

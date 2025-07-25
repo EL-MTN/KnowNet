@@ -63,46 +63,47 @@ export class AICompletionService {
 				return `[${stmt.type.toUpperCase()}] "${stmt.content}"`;
 			});
 
-			const response = await axios.post(this.configManager.getUrl(), {
-				model: this.configManager.getModel(),
-				max_tokens: this.configManager.getMaxTokens(),
-				temperature: this.configManager.getTemperature(),
-				messages: [
-					{
-						role: 'system',
-						content: THEORY_GENERATION_SYSTEM_PROMPT,
-					},
-					{ role: 'user', content: context.join('\n') },
-				],
-				response_format: {
-					type: 'json_schema',
-					json_schema: {
-						name: 'TheoryCompletionResult',
-						schema: {
-							type: 'object',
-							properties: {
-								content: { type: 'string' },
-								suggestedTags: {
-									type: 'array',
-									items: { type: 'string' },
-								},
-								suggestedConfidence: { type: 'number' },
-								reasoning: { type: 'string' },
-							},
-							required: [
-								'content',
-								'suggestedTags',
-								'suggestedConfidence',
-								'reasoning',
-							],
-						},
-						strict: true,
-					},
-				},
-			});
-
-			const content = response.data.choices[0].message.content;
+			// Try with JSON schema first (for compatible models)
 			try {
+				const response = await axios.post(this.configManager.getUrl(), {
+					model: this.configManager.getModel(),
+					max_tokens: this.configManager.getMaxTokens(),
+					temperature: this.configManager.getTemperature(),
+					messages: [
+						{
+							role: 'system',
+							content: THEORY_GENERATION_SYSTEM_PROMPT,
+						},
+						{ role: 'user', content: context.join('\n') },
+					],
+					response_format: {
+						type: 'json_schema',
+						json_schema: {
+							name: 'TheoryCompletionResult',
+							schema: {
+								type: 'object',
+								properties: {
+									content: { type: 'string' },
+									suggestedTags: {
+										type: 'array',
+										items: { type: 'string' },
+									},
+									suggestedConfidence: { type: 'number' },
+									reasoning: { type: 'string' },
+								},
+								required: [
+									'content',
+									'suggestedTags',
+									'suggestedConfidence',
+									'reasoning',
+								],
+							},
+							strict: true,
+						},
+					},
+				});
+
+				const content = response.data.choices[0].message.content;
 				const parsed = JSON.parse(content);
 				return {
 					content: parsed.content || 'Generated theory',
@@ -110,12 +111,95 @@ export class AICompletionService {
 					suggestedConfidence: parsed.suggestedConfidence || 0.7,
 					reasoning: parsed.reasoning || 'AI-generated derivation',
 				};
-			} catch {
-				throw new Error('Unexpected response format from AI');
+			} catch (error: any) {
+				// Fallback: Try without JSON schema for broader compatibility
+				console.warn(
+					'JSON schema not supported, falling back to text parsing',
+				);
+				return this.generateWithTextParsing(context);
 			}
-		} catch (error) {
-			console.error('Error calling AI API:', error);
-			throw error;
+		} catch (error: any) {
+			// Enhanced error handling
+			if (error.code === 'ECONNREFUSED') {
+				throw new Error(
+					'AI service is not running. Please start your local LLM or check the AI settings.',
+				);
+			} else if (error.response?.status === 401) {
+				throw new Error(
+					'Authentication failed. Please check your API key in AI settings.',
+				);
+			} else if (error.response?.status === 404) {
+				throw new Error(
+					'AI endpoint not found. Please check the URL in AI settings.',
+				);
+			} else if (error.response?.data?.error) {
+				throw new Error(
+					`AI service error: ${error.response.data.error}`,
+				);
+			} else {
+				throw new Error(
+					`Failed to generate theory: ${error.message || 'Unknown error'}`,
+				);
+			}
 		}
+	}
+
+	private async generateWithTextParsing(
+		context: string[],
+	): Promise<TheoryCompletionResult> {
+		const fallbackPrompt = `${THEORY_GENERATION_SYSTEM_PROMPT}
+
+Please respond with ONLY valid JSON in this exact format:
+{
+  "content": "Your generated theory here",
+  "suggestedTags": ["tag1", "tag2"],
+  "suggestedConfidence": 0.8,
+  "reasoning": "Your reasoning here"
+}`;
+
+		const response = await axios.post(this.configManager.getUrl(), {
+			model: this.configManager.getModel(),
+			max_tokens: this.configManager.getMaxTokens(),
+			temperature: this.configManager.getTemperature(),
+			messages: [
+				{
+					role: 'system',
+					content: fallbackPrompt,
+				},
+				{ role: 'user', content: context.join('\n') },
+			],
+		});
+
+		const content = response.data.choices[0].message.content;
+
+		// Try to extract JSON from the response
+		const jsonMatch = content.match(/\{[\s\S]*\}/);
+		if (jsonMatch) {
+			try {
+				const parsed = JSON.parse(jsonMatch[0]);
+				return {
+					content: parsed.content || 'Generated theory',
+					suggestedTags: parsed.suggestedTags || [],
+					suggestedConfidence: parsed.suggestedConfidence || 0.7,
+					reasoning: parsed.reasoning || 'AI-generated derivation',
+				};
+			} catch (e) {
+				// If JSON parsing fails, extract content manually
+				return this.extractFromText(content);
+			}
+		}
+
+		return this.extractFromText(content);
+	}
+
+	private extractFromText(text: string): TheoryCompletionResult {
+		// Simple extraction as last resort
+		const lines = text.split('\n').filter((l) => l.trim());
+		return {
+			content: lines[0] || 'Generated theory',
+			suggestedTags: [],
+			suggestedConfidence: 0.7,
+			reasoning: 'AI-generated derivation (extracted from text)',
+		};
 	}
 }
