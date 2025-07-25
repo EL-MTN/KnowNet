@@ -9,3 +9,4 @@ coverage/
 *.js.map
 data/*.json
 !data/example.json
+.next/

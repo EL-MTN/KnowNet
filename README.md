@@ -28,11 +28,31 @@ npm run build
 
 ## Usage
 
-KnowNet offers two modes of operation:
+KnowNet offers multiple ways to interact with your knowledge network:
 
-### Interactive Mode (NEW!)
+### 1. Web Interface (NEW!)
 
-For a continuous, user-friendly interface:
+A modern React-based web UI with interactive graph visualization:
+
+```bash
+# Start the API server
+npm run api:dev
+
+# In a new terminal, start the frontend
+cd frontend
+npm install
+npm start
+```
+
+Open http://localhost:3000 to access the web interface featuring:
+- 🌐 Interactive graph visualization with vis.js
+- 📝 Real-time statement management
+- 🔍 Smart search and filtering
+- 🤖 AI-powered features
+
+### 2. Interactive CLI Mode
+
+For a terminal-based interface:
 
 ```bash
 npm run interactive
@@ -44,7 +64,7 @@ This provides:
 - 🔄 Continuous operation without restarting
 - 📝 Smart prompts with validation
 
-### Command-Line Mode
+### 3. Command-Line Mode
 
 For scripting and automation, use the traditional command-line interface.
 
@@ -175,11 +195,16 @@ Run tests:
 npm test
 ```
 
+## API Documentation
+
+KnowNet includes a REST API for building custom integrations. See [API.md](API.md) for full documentation.
+
 ## Future Enhancements
 
-- Visual graph representation
+- ~~Visual graph representation~~ ✅ Done with web UI!
 - Real Claude API integration for theory generation
 - More sophisticated contradiction detection
 - Collaborative knowledge building
 - Import from various formats
 - Reasoning rule customization
+- Mobile app support
